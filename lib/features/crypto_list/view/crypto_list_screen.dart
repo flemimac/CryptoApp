@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_learn/repositories/crypto_coins/crypto_coins_repository.dart';
+import 'package:flutter_learn/repositories/crypto_coins/models/crypto_coin.dart';
 import '../widgets/widgets.dart';
-
 
 class CryptoListScreen extends StatefulWidget {
   const CryptoListScreen({super.key, required this.title});
@@ -14,20 +15,36 @@ class CryptoListScreen extends StatefulWidget {
 }
 
 class _CryptoListScreen extends State<CryptoListScreen> {
+  List<CryptoCoin>? _cryptoCoinsList;
+
+  @override
+  void initState() {
+    _loadCryptoCoins();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Crypto Currenciest List'),
       ),
-      body: ListView.separated(
-        itemCount: 15,
-        separatorBuilder: (context, index) => const Divider(),
-        itemBuilder: (context, i) {
-          const coinName = 'Bitcoin';
-          return CryptoCoinTile(coinName: coinName);
-        },
-      ),
+      body: (_cryptoCoinsList == null)
+          ? Center(child: const CircularProgressIndicator())
+          : ListView.separated(
+              padding: EdgeInsets.only(top: 16),
+              itemCount: _cryptoCoinsList!.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, i) {
+                final coin = _cryptoCoinsList![i];
+                return CryptoCoinTile(coin: coin);
+              },
+            ),
     );
+  }
+
+  Future<void> _loadCryptoCoins() async {
+    _cryptoCoinsList = await CryptoCoinsRepository().getCoinsList();
+    setState(() {});
   }
 }
