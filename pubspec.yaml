@@ -1,7 +1,7 @@
 name: flutter_learn
 description: "A new Flutter project."
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   flutter_svg: ^2.0.10+1
   dio: ^5.7.0
+  get_it: ^8.0.2
 
   cupertino_icons: ^1.0.8
 
