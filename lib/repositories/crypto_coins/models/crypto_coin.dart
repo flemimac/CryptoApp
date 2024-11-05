@@ -1,4 +1,6 @@
-class CryptoCoin {
+import 'package:equatable/equatable.dart';
+
+class CryptoCoin extends Equatable {
   CryptoCoin({
     required this.name,
     required this.priceInUSD,
@@ -8,4 +10,7 @@ class CryptoCoin {
   final String name;
   final double priceInUSD;
   final String imageURL;
+
+  @override
+  List<Object?> get props => [name, priceInUSD, imageURL];
 }

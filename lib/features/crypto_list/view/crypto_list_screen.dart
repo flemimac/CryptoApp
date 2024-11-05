@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_learn/features/crypto_list/bloc/crypto_list_bloc.dart';
@@ -31,59 +33,59 @@ class _CryptoListScreen extends State<CryptoListScreen> {
         appBar: AppBar(
           title: const Text('Crypto Currenciest List'),
         ),
-        body: BlocBuilder<CryptoListBloc, CryptoListState>(
-          bloc: _cryptoListBloc,
-          builder: (context, state) {
-            if (state is CryptoListLoaded) {
-              return ListView.separated(
-                padding: EdgeInsets.only(top: 16),
-                itemCount: state.coinsList.length,
-                separatorBuilder: (context, index) => const Divider(),
-                itemBuilder: (context, i) {
-                  final coin = state.coinsList[i];
-                  return CryptoCoinTile(coin: coin);
-                },
-              );
-            }
-            if (state is CryptoListLoadingFailure) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Something went wrong',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 24),
-                    ),
-                    Text(
-                      'Please try againg later',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return const Center(child: CircularProgressIndicator());
+        body: RefreshIndicator(
+          onRefresh: () async {
+            final completer = Completer();
+            _cryptoListBloc.add(LoadCryptoList(completer: completer));
+            return completer.future;
           },
-        )
-
-        // (_cryptoCoinsList == null)
-        //     ? Center(child: const CircularProgressIndicator())
-        //     : ListView.separated(
-        //         padding: EdgeInsets.only(top: 16),
-        //         itemCount: _cryptoCoinsList!.length,
-        //         separatorBuilder: (context, index) => const Divider(),
-        //         itemBuilder: (context, i) {
-        //           final coin = _cryptoCoinsList![i];
-        //           return CryptoCoinTile(coin: coin);
-        //         },
-        //       ),
-        );
+          child: BlocBuilder<CryptoListBloc, CryptoListState>(
+            bloc: _cryptoListBloc,
+            builder: (context, state) {
+              if (state is CryptoListLoaded) {
+                return ListView.separated(
+                  padding: EdgeInsets.only(top: 16),
+                  itemCount: state.coinsList.length,
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemBuilder: (context, i) {
+                    final coin = state.coinsList[i];
+                    return CryptoCoinTile(coin: coin);
+                  },
+                );
+              }
+              if (state is CryptoListLoadingFailure) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Something went wrong',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 24),
+                      ),
+                      Text(
+                        'Please try againg later',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      ),
+                      const SizedBox(height: 30),
+                      TextButton(
+                          onPressed: () {
+                            _cryptoListBloc.add(LoadCryptoList());
+                          },
+                          child: const Text('Try againg'))
+                    ],
+                  ),
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        ));
   }
 }
