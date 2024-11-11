@@ -12,6 +12,7 @@ class CryptoCoinsRepository implements AbstractCoinsRepository {
 
     final data = respone.data as Map<String, dynamic>;
     final dataRaw = data['RAW'] as Map<String, dynamic>;
+
     final cryptoCoinList = dataRaw.entries.map((e) {
       final usdData =
           (e.value as Map<String, dynamic>)['USD'] as Map<String, dynamic>;

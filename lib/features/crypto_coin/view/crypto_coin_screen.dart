@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class CryptoCoinScreen extends StatefulWidget {
@@ -9,25 +8,22 @@ class CryptoCoinScreen extends StatefulWidget {
 }
 
 class _CryptoCoinScreenState extends State<CryptoCoinScreen> {
-  String? coinName;
+  // String? coinName;
 
   @override
   void didChangeDependencies() {
-    final args = ModalRoute.of(context)?.settings.arguments;
-    assert(args != null && args is String, 'You must provide String args');
-    coinName = args as String;
-    setState(() {
-      
-    });
+    // final args = ModalRoute.of(context)?.settings.arguments;
+    // assert(args != null && args is String, 'You must provide String args');
+    // coinName = args as String;
+    setState(() {});
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(coinName ?? "..."),
-      )
-    );
+        appBar: AppBar(
+      title: Text("..."),
+    ));
   }
 }
